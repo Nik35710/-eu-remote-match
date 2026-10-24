@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EU Remote Match</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f2f5fa;color:#122039}
+header{background:#0b1830;color:white;padding:17px 20px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-weight:800;font-size:18px}
+.logo span{color:#60a5fa}
+.tag{font-size:11px;color:#cbd5e1}
+main{max-width:520px;margin:auto}
+.hero{background:linear-gradient(145deg,#0b1830,#123d81);color:white;padding:42px 24px 34px}
+.eyebrow{color:#93c5fd;font-size:12px;font-weight:800;letter-spacing:1px}
+h1{font-size:38px;line-height:1.08;letter-spacing:-1.3px;margin:18px 0}
+h1 em{font-style:normal;color:#60a5fa}
+.hero p{color:#dbeafe;line-height:1.6}
+.perks{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:25px 0}
+.perk{border:1px solid #42649b;border-radius:13px;padding:14px;background:#ffffff10}
+.perk strong{display:block;font-size:19px}
+.perk small{color:#cbd5e1}
+button{font:inherit;cursor:pointer}
+.primary{border:0;background:#075bfa;color:white;padding:17px;border-radius:13px;font-weight:800;width:100%;font-size:16px}
+.primary:active{background:#0645bf}
+.secondary{background:white;border:1px solid #d5deed;padding:15px;border-radius:12px;font-weight:700}
+.note{text-align:center;color:#b9c8e1;font-size:12px;margin-top:13px}
+.screen{display:none;padding:25px 20px}
+.screen.active{display:block}
+.hero.active{display:block}
+.progress{display:flex;gap:5px;margin:18px 0 28px}
+.progress i{height:5px;flex:1;border-radius:8px;background:#dce5f2}
+.progress i.done{background:#075bfa}
+.kicker{font-size:13px;color:#075bfa;font-weight:800}
+h2{font-size:27px;line-height:1.2;margin:12px 0}
+.desc{color:#65748d;font-size:14px;line-height:1.6}
+.options{display:grid;gap:10px;margin:26px 0}
+.option{border:1.5px solid #dce3ef;border-radius:13px;background:white;padding:17px;text-align:left;color:#24334e}
+.option.selected{border-color:#075bfa;background:#edf4ff;box-shadow:0 0 0 1px #075bfa}
+.option:before{content:"○";margin-right:12px;color:#8b9bb3}
+.option.selected:before{content:"●";color:#075bfa}
+.controls{display:flex;gap:10px;margin-top:28px}
+.controls .primary{flex:1}
+.info{background:#e9f1ff;padding:14px;border-radius:12px;color:#37527c;font-size:13px;line-height:1.5}
+.job{background:white;border:1px solid #dce3ef;border-radius:17px;padding:20px;margin:15px 0}
+.pill{display:inline-block;background:#e8f8ef;color:#167346;border-radius:30px;padding:6px 10px;font-size:11px;font-weight:800}
+.salary{font-size:23px;font-weight:900;margin:13px 0}
+.meta{color:#66758c;font-size:13px;line-height:1.9}
+.lock{background:#f2f5fa;padding:13px;border-radius:10px;color:#65748d;font-size:13px;margin-top:14px}
+.pay{background:#101e3b;color:white;padding:23px;border-radius:18px;margin:20px 0}
+.pay h2{font-size:24px}
+.pay ul{padding-left:20px;line-height:2}
+.price{font-size:34px;font-weight:900;margin:15px 0}
+.fine{font-size:12px;color:#9fb0cf;line-height:1.5}
+footer{padding:22px;text-align:center;color:#7c8ba0;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+<div><div class="logo">💼 EU <span>Remote Match</span></div><div class="tag">YOUR REMOTE CAREER STARTS HERE</div></div>
+<div>🌍</div>
+</header>
+<main>
+<section class="hero active" id="home">
+<div class="eyebrow">EUROPEAN REMOTE OPPORTUNITIES</div>
+<h1>Работай из дома.<br><em>Зарабатывай в евро.</em></h1>
+<p>Узнай, какие удалённые вакансии могут подойти под твой опыт, язык и страну проживания.</p>
+<div class="perks">
+<div class="perk"><strong>€1 000+</strong><small>Примеры зарплат</small></div>
+<div class="perk"><strong>100% online</strong><small>Удалённый формат</small></div>
+<div class="perk"><strong>7 вопросов</strong><small>Короткая анкета</small></div>
+<div class="perk"><strong>Подбор</strong><small>Под твой профиль</small></div>
+</div>
+<button class="primary" onclick="start()">Подобрать работу →</button>
+<div class="note">Предварительная анкета бесплатно · Около 1 минуты</div>
+</section>
+<section class="screen" id="quiz">
+<div class="kicker" id="stepLabel"></div>
+<div class="progress" id="progress"></div>
+<h2 id="question"></h2>
+<p class="desc" id="explanation"></p>
+<div class="options" id="options"></div>
+<div class="info">🔒 Мы не запрашиваем паспортные или банковские данные для подбора.</div>
+<div class="controls">
+<button class="secondary" onclick="back()">← Назад</button>
+<button class="primary" onclick="next()">Продолжить →</button>
+</div>
+</section>
+<section class="screen" id="results">
+<div class="pill">✓ Анкета завершена</div>
+<h2>Ваш профиль готов!</h2>
+<p class="desc" id="summary"></p>
+<div class="info">Ниже показаны демонстрационные примеры должностей и зарплат. Реальная база работодателей ещё не подключена.</div>
+<div id="jobList"></div>
+<div class="pay">
+<div class="eyebrow">ПЕРСОНАЛЬНЫЙ ПАКЕТ ОТКЛИКА</div>
+<h2>Подготовься к следующему шагу</h2>
+<ul>
+<li>Подбор актуальных вакансий</li>
+<li>Проверка соответствия требованиям</li>
+<li>Рекомендации по резюме</li>
+<li>Сопроводительное письмо</li>
+<li>Инструкция по отклику</li>
+</ul>
+<div class="price">€9,99</div>
+<button class="primary" onclick="demoPay()">Посмотреть пакет →</button>
+<p class="fine">Разовая оплата, без подписки. В демоверсии оплата отключена. Трудоустройство не гарантируется.</p>
+</div>
+<button class="secondary" onclick="start()" style="width:100%">Изменить ответы</button>
+</section>
+<section class="screen" id="checkout">
+<div class="pill">✓ Демонстрация</div>
+<h2>Персональный пакет</h2>
+<p class="desc">Так будет выглядеть последний шаг перед оплатой.</p>
+<div class="job">
+<h3>В состав пакета войдут:</h3>
+<p>✓ Персональные рекомендации</p>
+<p>✓ Помощь с резюме</p>
+<p>✓ Сопроводительное письмо</p>
+<p>✓ Инструкции по отклику</p>
+<div class="salary">€9,99 · один раз</div>
+<div class="info">Это прототип. Настоящая оплата и выдача вакансий будут подключены после проверки источников и условий работы сервиса.</div>
+</div>
+<button class="primary" onclick="show('results')">← Вернуться к результатам</button>
+</section>
+</main>
+<footer>EU Remote Match · Демонстрационная версия · 2026</footer>
+<script>
+const questions=[
+{q:"В какой стране вы проживаете?",d:"Это важно: не все компании нанимают сотрудников из любой страны.",a:["Украина","Польша","Германия","Другая страна"]},
+{q:"Какой у вас уровень английского?",d:"Подберём направления с подходящими языковыми требованиями.",a:["Не знаю английский","A1–A2","B1","B2","C1–C2"]},
+{q:"Какой у вас опыт работы?",d:"Покажем подходящие направления для вашего уровня.",a:["Без опыта","Менее 1 года","1–3 года","Более 3 лет"]},
+{q:"Какое направление вам интересно?",d:"Выберите то, чем вам хотелось бы заниматься.",a:["Любое направление","Поддержка клиентов","Продажи","Виртуальный ассистент","IT и технологии","Маркетинг"]},
+{q:"Какой график вам подходит?",d:"Это поможет отфильтровать предложения по занятости.",a:["2–4 часа в день","4–6 часов в день","6–8 часов в день","Гибкий график"]},
+{q:"Какую зарплату вы рассматриваете?",d:"Укажите желаемый месячный доход.",a:["От €1 000","От €1 500","От €2 000","От €3 000"]},
+{q:"Когда вы готовы начать?",d:"Последний вопрос — и покажем ваш профиль.",a:["Как можно скорее","В течение недели","В течение месяца","Пока изучаю варианты"]}
+];
+let step=0;
+let answers=Array(7).fill(-1);
+function show(id){
+document.querySelectorAll("main>section").forEach(x=>x.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+window.scrollTo(0,0);
+}
+function start(){step=0;show("quiz");render()}
+function render(){
+let q=questions[step];
+document.getElementById("stepLabel").textContent="ШАГ "+(step+1)+" ИЗ 7";
+document.getElementById("progress").innerHTML=questions.map((_,i)=>'<i class="'+(i<=step?"done":"")+'"></i>').join("");
+document.getElementById("question").textContent=q.q;
+document.getElementById("explanation").textContent=q.d;
+document.getElementById("options").innerHTML=q.a.map((x,i)=>'<button class="option '+(answers[step]===i?"selected":"")+'" onclick="choose('+i+')">'+x+'</button>').join("");
+}
+function choose(i){answers[step]=i;render()}
+function next(){
+if(answers[step]<0){alert("Пожалуйста, выберите вариант ответа.");return}
+if(step<6){step++;render();window.scrollTo(0,0)}
+else results();
+}
+function back(){
+if(step>0){step--;render()}
+else show("home");
+}
+function results(){
+let a=answers.map((v,i)=>questions[i].a[v]);
+document.getElementById("summary").textContent=a[0]+" · Английский: "+a[1]+" · Опыт: "+a[2]+" · Доход: "+a[5];
+let samples=[
+{title:"Customer Support Specialist",pay:"€1 200–1 700",type:"Поддержка клиентов"},
+{title:"Virtual Assistant",pay:"€1 000–1 500",type:"Администрирование"},
+{title:"Sales Representative",pay:"€1 500–2 400",type:"Продажи"}
+];
+let html="";
+samples.forEach(j=>{
+html+='<div class="job"><span class="pill">REMOTE · ПРИМЕР</span><h3>'+j.title+'</h3><div class="salary">'+j.pay+' / мес.</div><div class="meta">💻 Удалённый формат<br>📋 '+j.type+'<br>🌍 Страны найма необходимо проверять</div><div class="lock">🔒 Реальные данные работодателя пока не подключены</div></div>';
+});
+document.getElementById("jobList").innerHTML=html;
+show("results");
+}
+function demoPay(){show("checkout")}
+</script>
+</body>
+</html>
